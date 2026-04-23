@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}التحكم في التبريد — Smart Stadium{% endblock %}
+{% block content %}
+<h1 class="page-heading">لوحة التحكم في التبريد</h1>
+<div class="toolbar" style="margin-bottom:20px;">
+    <button type="button" class="btn-primary set-all" data-level="off">إيقاف الكل</button>
+    <button type="button" class="btn-primary set-all" data-level="low">منخفض للكل</button>
+    <button type="button" class="btn-primary set-all" data-level="medium">متوسط للكل</button>
+    <button type="button" class="btn-primary set-all" data-level="high">عالٍ للكل</button>
+</div>
+<div class="grid-3-2" style="margin-bottom:24px;">
+    {% for lvl in ['off','low','medium','high','auto'] %}
+    <div class="stat-card">
+        <h3>{{ lvl }}</h3>
+        <div class="stat-big">{{ counts[lvl] }}</div>
+        <p class="muted">مقعد</p>
+    </div>
+    {% endfor %}
+</div>
+<div class="toolbar">
+    <label for="blockFilter">تصفية القطاع</label>
+    <select id="blockFilter" style="max-width:200px;">
+        <option value="all">الكل</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+    </select>
+</div>
+<div class="table-wrap">
+    <table class="data-table" id="coolingTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>القطاع</th>
+                <th>صف/مقعد</th>
+                <th>الحالة</th>
+                <th>أزرار التبريد</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in rows %}
+            <tr data-block="{{ r['block'] }}">
+                <td>{{ r['id'] }}</td>
+                <td>{{ r['block'] }}</td>
+                <td>{{ r['row_number'] }} / {{ r['seat_number'] }}</td>
+                <td class="cool-status">{{ r['cooling_status'] }}</td>
+                <td class="cell-actions">
+                    <button type="button" title="إيقاف" class="btn-tiny cool-btn{% if r['cooling_status']=='off' %} on{% endif %}" data-seat="{{ r['id'] }}" data-level="off">ا</button>
+                    <button type="button" title="منخفض" class="btn-tiny cool-btn{% if r['cooling_status']=='low' %} on{% endif %}" data-seat="{{ r['id'] }}" data-level="low">خ</button>
+                    <button type="button" title="متوسط" class="btn-tiny cool-btn{% if r['cooling_status']=='medium' %} on{% endif %}" data-seat="{{ r['id'] }}" data-level="medium">م</button>
+                    <button type="button" title="عالٍ" class="btn-tiny cool-btn{% if r['cooling_status']=='high' %} on{% endif %}" data-seat="{{ r['id'] }}" data-level="high">ع</button>
+                    <button type="button" title="تلقائي" class="btn-tiny cool-btn{% if r['cooling_status']=='auto' %} on{% endif %}" data-seat="{{ r['id'] }}" data-level="auto">ت</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<p class="muted" id="coolingMsg"></p>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/cooling_control.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}خريطة الملعب — Smart Stadium{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">{% endblock %}
+{% block content %}
+<h1 class="page-heading">خريطة الملعب التفاعلية</h1>
+<div class="map-layout">
+    <div id="sectorStats" style="display:none;">
+        {% for s in stats %}
+        <span data-block="{{ s.block }}" data-total="{{ s.total }}" data-occ="{{ s.occupied }}" data-pct="{{ s.pct }}"></span>
+        {% endfor %}
+    </div>
+    <div class="map-canvas-wrap">
+        <canvas id="stadiumCanvas" width="520" height="520" aria-label="خريطة الملعب"></canvas>
+    </div>
+    <p class="muted">مرر المؤشر فوق قطاع لعرض الملخص، وانقر لعرض المقاعد في الأسفل.</p>
+    <div class="map-filters">
+        <button type="button" class="toggle-btn active" data-filter="all">الكل</button>
+        <button type="button" class="toggle-btn" data-filter="occ">المشغولة</button>
+        <button type="button" class="toggle-btn" data-filter="free">الفارغة</button>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table" id="seatDetailTable">
+            <thead>
+                <tr>
+                    <th>رقم المقعد</th>
+                    <th>الصف</th>
+                    <th>البوابة</th>
+                    <th>الحالة</th>
+                    <th>التبريد</th>
+                </tr>
+            </thead>
+            <tbody id="seatDetailBody">
+                <tr><td colspan="5">اختر قطاعاً من الخريطة.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="mapTooltip" class="map-tooltip"></div>
+{% endblock %}
+{% block extra_js %}
+<script>window.SEATS_DATA = {{ seats_json|safe }};</script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endblock %}

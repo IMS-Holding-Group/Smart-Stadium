@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}لوحة المشجع — Smart Stadium{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">{% endblock %}
+{% block content %}
+<h1 class="page-heading">مرحباً {{ fan['full_name'] }}</h1>
+<div class="fan-card">
+    <h2>بطاقة المشجع</h2>
+    <div class="fan-grid">
+        <div><span class="muted">الاسم:</span> {{ fan['full_name'] }}</div>
+        <div><span class="muted">رقم التذكرة:</span> {{ fan['ticket_number'] }}</div>
+        <div><span class="muted">المقعد:</span> قطاع {{ fan['block'] }} — صف {{ fan['row_number'] }} — رقم {{ fan['seat_number'] }}</div>
+        <div><span class="muted">البوابة:</span> {{ fan['gate'] }}</div>
+        <div><span class="muted">حالة التبريد:</span> <span id="fanCoolingLabel">{{ fan['cooling_status'] }}</span></div>
+    </div>
+    <div class="cooling-quick" data-seat-id="{{ fan['seat_id'] }}">
+        <span class="muted">تغيير سريع:</span>
+        <button type="button" class="btn-secondary btn-sm fan-cool" data-level="off">إيقاف</button>
+        <button type="button" class="btn-secondary btn-sm fan-cool" data-level="low">منخفض</button>
+        <button type="button" class="btn-secondary btn-sm fan-cool" data-level="medium">متوسط</button>
+        <button type="button" class="btn-secondary btn-sm fan-cool" data-level="high">عالٍ</button>
+        <button type="button" class="btn-secondary btn-sm fan-cool" data-level="auto">تلقائي</button>
+    </div>
+    <p class="muted" id="fanCoolingMsg"></p>
+</div>
+<div class="fan-card">
+    <h3>درجة الحرارة في منطقتك (قطاع {{ fan['block'] }})</h3>
+    <div class="stat-big">{{ zone_temp }}°C</div>
+</div>
+<div class="fan-card">
+    <h3>أحدث التنبيهات</h3>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>الوقت</th>
+                    <th>النوع</th>
+                    <th>الأولوية</th>
+                    <th>الرسالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in fan_alerts %}
+                <tr>
+                    <td>{{ a['created_at'] }}</td>
+                    <td>{{ a['alert_type'] }}</td>
+                    <td>{{ a['priority'] }}</td>
+                    <td>{{ a['message_ar'] }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4">لا توجد تنبيهات مفتوحة.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="fan-actions">
+    <a class="btn-primary" href="{{ url_for('navigation.guide') }}">التوجيه إلى مقعدي</a>
+    <a class="btn-secondary" href="{{ url_for('fans.fan_detail', fan_id=fan['id']) }}">تفاصيلي</a>
+    <a class="btn-secondary" href="{{ url_for('alerts.center') }}">مركز التنبيهات</a>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.querySelectorAll('.fan-cool').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var wrap = document.querySelector('.cooling-quick');
+        var seatId = wrap.getAttribute('data-seat-id');
+        var level = btn.getAttribute('data-level');
+        var msg = document.getElementById('fanCoolingMsg');
+        fetch('/api/cooling/set', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ seat_id: Number(seatId), level: level })
+        }).then(function(r) { return r.json(); }).then(function(data) {
+            if (data.ok) {
+                document.getElementById('fanCoolingLabel').textContent = data.cooling_status;
+                msg.textContent = 'تم تحديث التبريد.';
+            } else {
+                msg.textContent = data.error || 'تعذر التحديث.';
+            }
+        }).catch(function() { msg.textContent = 'خطأ في الاتصال.'; });
+    });
+});
+</script>
+{% endblock %}

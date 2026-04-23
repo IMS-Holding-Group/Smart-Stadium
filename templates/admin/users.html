@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}المستخدمون — Smart Stadium{% endblock %}
+{% block content %}
+<h1 class="page-heading">إدارة المستخدمين</h1>
+<div class="table-wrap" style="margin-bottom:24px;">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>اسم المستخدم</th>
+                <th>الدور</th>
+                <th>الاسم الكامل</th>
+                <th>تاريخ الإنشاء</th>
+                <th>إجراء</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in rows %}
+            <tr>
+                <td>{{ u['id'] }}</td>
+                <td>{{ u['username'] }}</td>
+                <td>{{ u['role'] }}</td>
+                <td>{{ u['full_name'] }}</td>
+                <td>{{ u['created_at'] }}</td>
+                <td>
+                    {% if u['id'] != session.get('user_id') %}
+                    <form method="post" action="{{ url_for('admin.users_delete', user_id=u['id']) }}" onsubmit="return confirm('تأكيد حذف المستخدم؟');">
+                        <button type="submit" class="btn-danger btn-sm">حذف</button>
+                    </form>
+                    {% else %}
+                    <span class="muted">حسابك</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<h2>إضافة مستخدم</h2>
+<form method="post" action="{{ url_for('admin.users_add') }}" class="stack-form" style="max-width:480px;">
+    <label for="nu_username">اسم المستخدم</label>
+    <input id="nu_username" name="username" required>
+    <label for="nu_password">كلمة المرور</label>
+    <input id="nu_password" name="password" type="password" required>
+    <label for="nu_role">الدور</label>
+    <select id="nu_role" name="role" required>
+        <option value="admin">admin</option>
+        <option value="staff">staff</option>
+        <option value="fan">fan</option>
+    </select>
+    <label for="nu_full_name">الاسم الكامل</label>
+    <input id="nu_full_name" name="full_name" required>
+    <button type="submit" class="btn-primary">إضافة</button>
+</form>
+{% endblock %}

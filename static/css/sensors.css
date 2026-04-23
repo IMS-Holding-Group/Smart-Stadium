@@ -1,0 +1,72 @@
+.sensors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.sensor-card {
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: #fff;
+    padding: 16px;
+}
+
+.sensor-code {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--color-primary-dark);
+}
+
+.temp-bar {
+    height: 8px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #2563eb, #facc15, #dc2626);
+    margin: 8px 0;
+    position: relative;
+}
+
+.temp-marker {
+    position: absolute;
+    top: -4px;
+    width: 4px;
+    height: 16px;
+    background: #1C1B2E;
+    border-radius: 2px;
+    transform: translateX(-50%);
+}
+
+.heat-canvas-wrap {
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: #fff;
+    padding: 12px;
+}
+
+#heatCanvas {
+    width: 100%;
+    max-width: 640px;
+    height: 360px;
+}
+
+.status-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+}
+
+.status-dot::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.status-on::before {
+    background: var(--color-success);
+}
+
+.status-off::before {
+    background: var(--color-danger);
+}

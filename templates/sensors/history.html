@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}سجل قراءات الحساسات — Smart Stadium{% endblock %}
+{% block content %}
+<h1 class="page-heading">سجل القراءات</h1>
+<div class="table-wrap">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>الحساس</th>
+                <th>درجة الحرارة</th>
+                <th>الرطوبة</th>
+                <th>الوقت</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in rows %}
+            <tr>
+                <td>{{ r['id'] }}</td>
+                <td>{{ r['sensor_code'] }}</td>
+                <td>{{ r['temperature'] }}°C</td>
+                <td>{{ r['humidity'] }}٪</td>
+                <td>{{ r['recorded_at'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<a class="btn-secondary" href="{{ url_for('sensors.monitor') }}">العودة للمراقبة</a>
+{% endblock %}

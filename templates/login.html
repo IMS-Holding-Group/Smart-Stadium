@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}تسجيل الدخول — Smart Stadium{% endblock %}
+{% block extra_css %}
+<style>
+    .login-wrap { min-height: calc(100vh - 64px - 80px); display: flex; align-items: center; justify-content: center; background: var(--color-bg-surface); padding: 24px; }
+    .login-card { width: 100%; max-width: 420px; background: #fff; border: 1px solid var(--color-border); border-radius: 12px; padding: 32px 28px; text-align: center; }
+    .login-logo { width: 120px; height: auto; margin-bottom: 16px; }
+    .login-title { font-size: 28px; font-weight: 700; color: var(--color-primary-dark); margin: 0 0 8px; }
+    .login-sub { font-size: 16px; color: var(--color-text-muted); margin: 0 0 24px; }
+    .login-error { color: var(--color-danger); margin-top: 12px; font-size: 15px; }
+</style>
+{% endblock %}
+{% block content %}
+<div class="login-wrap">
+    <div class="login-card">
+        <img src="{{ url_for('assets', filename='images/Logo.jpeg') }}" alt="شعار" class="login-logo">
+        <h1 class="login-title">نظام Smart Stadium</h1>
+        <p class="login-sub">لتطوير تجربة المشجعين</p>
+        <form method="post" action="{{ url_for('auth.login') }}" class="stack-form">
+            <label for="username">اسم المستخدم</label>
+            <input id="username" name="username" type="text" autocomplete="username" required>
+            <label for="password">كلمة المرور</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+            <button type="submit" class="btn-primary btn-full">دخول</button>
+        </form>
+        {% if error %}
+        <p class="login-error">{{ error }}</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

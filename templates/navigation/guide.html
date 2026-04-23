@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}التوجيه — Smart Stadium{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">{% endblock %}
+{% block content %}
+<h1 class="page-heading">نظام التوجيه التفاعلي</h1>
+<div class="stat-card" style="margin-bottom:20px;">
+    <h2>اختيار المسار</h2>
+    <div class="toolbar" style="align-items:flex-end;">
+        <div style="flex:1;min-width:160px;">
+            <label for="fromGate">ابدأ من البوابة</label>
+            <select id="fromGate">
+                <option value="G1">G1</option>
+                <option value="G2">G2</option>
+                <option value="G3">G3</option>
+                <option value="G4">G4</option>
+            </select>
+        </div>
+        <div style="flex:1;min-width:120px;">
+            <label for="toBlock">القطاع</label>
+            <select id="toBlock">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+        </div>
+        <div style="flex:1;min-width:100px;">
+            <label for="toRow">رقم الصف</label>
+            <input id="toRow" type="number" min="1" max="10" value="5">
+        </div>
+        <div style="flex:1;min-width:100px;">
+            <label for="toSeat">رقم المقعد</label>
+            <input id="toSeat" type="number" min="1" max="10" value="3">
+        </div>
+        <button type="button" class="btn-primary" id="btnPath">احسب المسار</button>
+    </div>
+</div>
+<div class="map-canvas-wrap">
+    <canvas id="navCanvas" width="520" height="520" aria-label="خريطة التوجيه"></canvas>
+</div>
+<div class="stat-card" style="margin-top:16px;">
+    <h3>معلومات المسار</h3>
+    <p id="pathInfo" class="muted">اضغط «احسب المسار» لعرض التفاصيل.</p>
+    <ol id="pathSteps" style="font-size:15px;line-height:1.7;"></ol>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
+{% endblock %}

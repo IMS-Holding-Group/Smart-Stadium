@@ -1,0 +1,141 @@
+@font-face {
+    font-family: 'IBM Plex Sans Arabic';
+    src: url('/assets/fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+@font-face {
+    font-family: 'IBM Plex Sans Arabic';
+    src: url('/assets/fonts/IBMPlexSansArabic-Bold.ttf') format('truetype');
+    font-weight: 700;
+}
+
+:root {
+    --color-primary: #5B21B6;
+    --color-primary-dark: #2D1B69;
+    --color-primary-light: #8B5CF6;
+    --color-accent: #7C3AED;
+    --color-bg-main: #FFFFFF;
+    --color-bg-surface: #F5F3FF;
+    --color-text-primary: #1C1B2E;
+    --color-text-secondary: #4C1D95;
+    --color-text-muted: #6B7280;
+    --color-border: #DDD6FE;
+    --color-success: #059669;
+    --color-warning: #D97706;
+    --color-danger: #DC2626;
+}
+
+* {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    box-sizing: border-box;
+}
+
+body.page-body {
+    margin: 0;
+    background: var(--color-bg-main);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2 {
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--color-primary-dark);
+}
+
+h3, h4 {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--color-text-secondary);
+}
+
+p, label {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.main-content {
+    flex: 1;
+    padding: 24px 20px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.site-footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 14px;
+    color: var(--color-text-muted);
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg-surface);
+}
+
+.page-heading {
+    margin-bottom: 20px;
+}
+
+.stack-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: right;
+}
+
+.grid-3-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: #fff;
+    padding: 16px;
+}
+
+.stat-card h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.stat-big {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.progress-wrap {
+    margin-top: 8px;
+}
+
+.progress-bar {
+    height: 10px;
+    border-radius: 8px;
+    background: var(--color-bg-surface);
+    overflow: hidden;
+}
+
+.progress-bar > span {
+    display: block;
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 0.2s ease;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: center;
+}
+
+.muted {
+    color: var(--color-text-muted);
+    font-size: 15px;
+}

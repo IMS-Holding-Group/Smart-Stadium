@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}لوحة الموظف — Smart Stadium{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">{% endblock %}
+{% block content %}
+<h1 class="page-heading">لوحة موظف الخدمات</h1>
+<div class="grid-3-2">
+    <div class="stat-card">
+        <h3>متوسط الحرارة</h3>
+        <div class="stat-big">{{ avg_temp }}°C</div>
+    </div>
+    <div class="stat-card">
+        <h3>التنبيهات النشطة</h3>
+        <div class="stat-big {% if active_alerts %}alert-warn{% endif %}">{{ active_alerts }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>الحساسات النشطة</h3>
+        <div class="stat-big">{{ sensors_active }}</div>
+    </div>
+</div>
+<div class="toolbar">
+    <a class="btn-primary" href="{{ url_for('sensors.monitor') }}">مراقبة الحساسات</a>
+    <a class="btn-secondary" href="{{ url_for('cooling.control_page') }}">التبريد</a>
+    <a class="btn-secondary" href="{{ url_for('alerts.center') }}">التنبيهات</a>
+</div>
+{% endblock %}

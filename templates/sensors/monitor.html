@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}مراقبة الحساسات — Smart Stadium{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/sensors.css') }}">{% endblock %}
+{% block content %}
+<h1 class="page-heading">مراقبة الحساسات اللحظية</h1>
+<p class="muted">يتم التحديث تلقائياً كل 5 ثوانٍ.</p>
+<div class="toolbar">
+    <button type="button" class="btn-secondary" id="btnSimulate">محاكاة قراءات جديدة</button>
+</div>
+<div id="sensorCards" class="sensors-grid">
+    {% for s in sensors %}
+    <div class="sensor-card" data-id="{{ s['id'] }}">
+        <div class="sensor-code">{{ s['sensor_code'] }}</div>
+        <p class="muted">المنطقة: {{ s['zone'] }}</p>
+        <div class="stat-big temp-val">{{ s['last_temp'] }}°C</div>
+        <div class="temp-bar" aria-hidden="true"><span class="temp-marker" style="left:0;"></span></div>
+        <p>الرطوبة: <span class="hum-val">{{ s['last_humidity'] }}</span>٪ 💧</p>
+        <p class="status-dot {% if s['status']=='active' %}status-on{% else %}status-off{% endif %}">
+            {% if s['status']=='active' %}نشط{% else %}معطل{% endif %}
+        </p>
+    </div>
+    {% endfor %}
+</div>
+<h2>الخريطة الحرارية المبسطة</h2>
+<div class="heat-canvas-wrap">
+    <canvas id="heatCanvas" width="640" height="360" aria-label="خريطة حرارية"></canvas>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>window.INITIAL_SENSORS_JSON = {{ sensors_json|safe }};</script>
+<script src="{{ url_for('static', filename='js/sensors_live.js') }}"></script>
+{% endblock %}

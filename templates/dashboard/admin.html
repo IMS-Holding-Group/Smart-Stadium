@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}لوحة الإدارة — Smart Stadium{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">{% endblock %}
+{% block content %}
+<h1 class="page-heading">لوحة تحكم إدارة الملعب</h1>
+<div class="grid-3-2">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.96 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="#5B21B6"/></svg>
+            <div>
+                <h3>إجمالي المشجعين</h3>
+                <div class="stat-big">{{ fans_total }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <h3>إشغال المقاعد</h3>
+        <div class="stat-big">{{ seats_occ }} / {{ seats_total }}</div>
+        <div class="progress-wrap">
+            <div class="progress-bar"><span style="width: {{ occ_pct }}%"></span></div>
+            <p class="muted">{{ occ_pct }}٪</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <h3>متوسط درجة الحرارة</h3>
+        <div class="stat-big">{{ avg_temp }}°C</div>
+        <p class="muted">من الحساسات النشطة</p>
+    </div>
+    <div class="stat-card">
+        <h3>التنبيهات النشطة</h3>
+        <div class="stat-big {% if active_alerts %}alert-warn{% endif %}">{{ active_alerts }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>حالة الحساسات</h3>
+        <p class="muted">نشطة: <strong>{{ sensors_active }}</strong></p>
+        <p class="muted">غير نشطة: <strong>{{ sensors_inactive }}</strong></p>
+    </div>
+    <div class="stat-card">
+        <h3>الطاقة المستهلكة اليوم</h3>
+        <div class="stat-big">{{ energy_kwh }}</div>
+        <p class="muted">kWh (تقديري من سجل التبريد)</p>
+    </div>
+</div>
+<h2>آخر التنبيهات</h2>
+<div class="table-wrap" style="margin-bottom:20px;">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>التاريخ</th>
+                <th>النوع</th>
+                <th>الأولوية</th>
+                <th>المنطقة</th>
+                <th>الرسالة</th>
+                <th>الحالة</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in recent_alerts %}
+            <tr>
+                <td>{{ a['created_at'] }}</td>
+                <td>{{ a['alert_type'] }}</td>
+                <td>{{ a['priority'] }}</td>
+                <td>{{ a['zone'] or '—' }}</td>
+                <td>{{ a['message_ar'] }}</td>
+                <td>{% if a['is_resolved'] %}محلول{% else %}مفتوح{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="toolbar">
+    <a class="btn-primary" href="{{ url_for('fans.fan_list') }}">المشجعون</a>
+    <a class="btn-secondary" href="{{ url_for('seats.seat_map') }}">خريطة المقاعد</a>
+    <a class="btn-secondary" href="{{ url_for('sensors.monitor') }}">الحساسات</a>
+    <a class="btn-secondary" href="{{ url_for('cooling.control_page') }}">التبريد</a>
+    <a class="btn-secondary" href="{{ url_for('navigation.guide') }}">التوجيه</a>
+    <a class="btn-secondary" href="{{ url_for('alerts.center') }}">التنبيهات</a>
+    <a class="btn-secondary" href="{{ url_for('stats.overview') }}">الإحصاءات</a>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}مركز التنبيهات — Smart Stadium{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/alerts.css') }}">{% endblock %}
+{% block content %}
+<h1 class="page-heading">مركز التنبيهات والطوارئ</h1>
+{% if is_admin %}
+<button type="button" class="btn-primary" id="btnOpenAlert">إرسال تنبيه جديد</button>
+{% endif %}
+<div class="toggle-group" id="prioFilters">
+    <button type="button" class="toggle-btn active" data-prio="all">الكل</button>
+    <button type="button" class="toggle-btn" data-prio="critical">حرجة</button>
+    <button type="button" class="toggle-btn" data-prio="high">عالية</button>
+    <button type="button" class="toggle-btn" data-prio="medium">متوسطة</button>
+    <button type="button" class="toggle-btn" data-prio="low">منخفضة</button>
+</div>
+<div class="toggle-group" id="resFilters">
+    <button type="button" class="toggle-btn active" data-res="open">غير محلولة</button>
+    <button type="button" class="toggle-btn" data-res="done">محلولة</button>
+    <button type="button" class="toggle-btn" data-res="all">كل الحالات</button>
+</div>
+<div class="table-wrap">
+    <table class="data-table" id="alertsTable">
+        <thead>
+            <tr>
+                <th>التاريخ والوقت</th>
+                <th>النوع</th>
+                <th>الأولوية</th>
+                <th>المنطقة</th>
+                <th>الرسالة</th>
+                <th>الإجراء</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in rows %}
+            <tr
+                data-prio="{{ a['priority'] }}"
+                data-resolved="{{ a['is_resolved'] }}"
+                class="prio-row"
+            >
+                <td>{{ a['created_at'] }}</td>
+                <td>{{ a['alert_type'] }}</td>
+                <td class="prio-cell {{ a['priority'] }}">{{ a['priority'] }}</td>
+                <td>{{ a['zone'] or '—' }}</td>
+                <td>{{ a['message_ar'] }}</td>
+                <td>
+                    {% if not a['is_resolved'] and session.get('role') in ['admin','staff'] %}
+                    <button type="button" class="btn-secondary btn-sm resolve-btn" data-id="{{ a['id'] }}">تحديد كمحلول</button>
+                    {% elif a['is_resolved'] %}
+                    <span class="muted">محلول{% if a['resolver_name'] %} — {{ a['resolver_name'] }}{% endif %}</span>
+                    {% else %}
+                    —
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if is_admin %}
+<div id="alertModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-box">
+        <h2>تنبيه جديد</h2>
+        <form method="post" action="{{ url_for('alerts.add_alert') }}" class="stack-form">
+            <label for="alert_type">النوع</label>
+            <select id="alert_type" name="alert_type" required>
+                <option value="heat">حرارة</option>
+                <option value="crowd">ازدحام</option>
+                <option value="device_fault">عطل جهاز</option>
+                <option value="emergency">طوارئ</option>
+                <option value="info">معلومة</option>
+            </select>
+            <label for="priority">الأولوية</label>
+            <select id="priority" name="priority" required>
+                <option value="critical">حرجة</option>
+                <option value="high">عالية</option>
+                <option value="medium">متوسطة</option>
+                <option value="low">منخفضة</option>
+            </select>
+            <label for="zone">المنطقة</label>
+            <input id="zone" name="zone" placeholder="مثال: A أو FIELD">
+            <label for="message_ar">الرسالة</label>
+            <textarea id="message_ar" name="message_ar" rows="3" required></textarea>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="btnCancelAlert">إلغاء</button>
+                <button type="submit" class="btn-primary">إرسال</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/alerts.js') }}"></script>
+{% endblock %}

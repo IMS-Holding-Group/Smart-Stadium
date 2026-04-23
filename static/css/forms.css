@@ -1,0 +1,23 @@
+input, select, textarea {
+    border: 2px solid #DDD6FE;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 15px;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+    background: #FFFFFF;
+    color: #1C1B2E;
+    transition: border-color 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #5B21B6;
+}
+
+label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--color-text-secondary);
+}

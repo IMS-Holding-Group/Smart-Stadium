@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}المشجعون — Smart Stadium{% endblock %}
+{% block content %}
+<h1 class="page-heading">إدارة المشجعين</h1>
+<div class="toolbar">
+    <input type="search" id="fanSearch" placeholder="بحث بالاسم أو رقم التذكرة" aria-label="بحث">
+    <a class="btn-primary" href="{{ url_for('fans.fan_add') }}">إضافة مشجع</a>
+</div>
+<div class="table-wrap">
+    <table class="data-table" id="fansTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>الاسم</th>
+                <th>التذكرة</th>
+                <th>المقعد</th>
+                <th>الجنسية</th>
+                <th>الحالة</th>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in rows %}
+            <tr data-name="{{ r['full_name']|e }}" data-ticket="{{ r['ticket_number']|e }}">
+                <td>{{ r['id'] }}</td>
+                <td>{{ r['full_name'] }}</td>
+                <td>{{ r['ticket_number'] }}</td>
+                <td>{{ r['block'] }}-{{ r['row_number'] }}-{{ r['seat_number'] }}</td>
+                <td>{{ r['nationality'] or '—' }}</td>
+                <td>{% if r['is_occupied'] %}مشغول{% else %}فارغ{% endif %}</td>
+                <td class="cell-actions">
+                    <a class="btn-secondary btn-sm" href="{{ url_for('fans.fan_detail', fan_id=r['id']) }}">تفاصيل</a>
+                    <form method="post" action="{{ url_for('fans.fan_delete', fan_id=r['id']) }}" class="del-form" data-name="{{ r['full_name']|e }}">
+                        <button type="submit" class="btn-danger btn-sm">حذف</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+(function() {
+    var input = document.getElementById('fanSearch');
+    var table = document.getElementById('fansTable');
+    if (!input || !table) return;
+    input.addEventListener('input', function() {
+        var q = (input.value || '').trim().toLowerCase();
+        table.querySelectorAll('tbody tr').forEach(function(tr) {
+            var n = (tr.getAttribute('data-name') || '').toLowerCase();
+            var t = (tr.getAttribute('data-ticket') || '').toLowerCase();
+            tr.style.display = (!q || n.indexOf(q) !== -1 || t.indexOf(q) !== -1) ? '' : 'none';
+        });
+    });
+    document.querySelectorAll('.del-form').forEach(function(f) {
+        f.addEventListener('submit', function(ev) {
+            var name = f.getAttribute('data-name') || '';
+            if (!confirm('تأكيد حذف المشجع: ' + name + ' ?')) ev.preventDefault();
+        });
+    });
+})();
+</script>
+{% endblock %}

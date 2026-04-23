@@ -1,0 +1,19 @@
+# Blueprint لـ Render: https://render.com/docs/blueprint-spec
+# ارفع المستودع واختر "Apply render.yaml" أو أضف خدمة ويب وحدد نفس الأوامر.
+
+services:
+  - type: web
+    name: smart-stadium
+    runtime: python
+    plan: free
+    # تهيئة SQLite وبيانات أولية مع كل build (مناسب للعرض التجريبي)
+    buildCommand: pip install -r requirements.txt && python init_db.py
+    # Render يزوّد متغير PORT تلقائياً
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.10.6"
+      - key: FLASK_DEBUG
+        value: "0"
+      - key: SECRET_KEY
+        generateValue: true

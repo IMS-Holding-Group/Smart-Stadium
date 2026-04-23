@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}الإحصاءات — Smart Stadium{% endblock %}
+{% block content %}
+<h1 class="page-heading">نظرة عامة على الإحصاءات</h1>
+<div class="grid-3-2">
+    <div class="stat-card">
+        <h3>إجمالي المشجعين</h3>
+        <div class="stat-big">{{ fans_total }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>نسبة الإشغال</h3>
+        <div class="stat-big">{{ occ_pct }}٪</div>
+    </div>
+    <div class="stat-card">
+        <h3>التنبيهات المحلولة</h3>
+        <div class="stat-big">{{ alerts_resolved }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>متوسط الرضا (تقديري)</h3>
+        <div class="stat-big">{{ satisfaction }}</div>
+        <p class="muted">من 5</p>
+    </div>
+</div>
+<h2>توزيع درجة الحرارة على مدار اليوم</h2>
+<div class="stat-card" style="margin-bottom:24px;">
+    <canvas id="statsChart" width="900" height="320" aria-label="رسم بياني لدرجات الحرارة"></canvas>
+</div>
+<h2>توزيع المشجعين حسب الجنسية</h2>
+<div class="table-wrap">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>الجنسية</th>
+                <th>العدد</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in nat_rows %}
+            <tr>
+                <td>{{ r['nat'] }}</td>
+                <td>{{ r['c'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    window.CHART_LABELS = {{ chart_labels|tojson }};
+    window.CHART_VALUES = {{ chart_values|tojson }};
+</script>
+<script>
+(function() {
+    var canvas = document.getElementById('statsChart');
+    if (!canvas || !window.CHART_LABELS) return;
+    var ctx = canvas.getContext('2d');
+    var labels = window.CHART_LABELS;
+    var values = window.CHART_VALUES;
+    if (!labels.length) {
+        ctx.fillStyle = '#6B7280';
+        ctx.font = '16px IBM Plex Sans Arabic, sans-serif';
+        ctx.fillText('لا توجد بيانات كافية للرسم.', 40, 80);
+        return;
+    }
+    var pad = 40;
+    var W = canvas.width;
+    var H = canvas.height;
+    var maxT = Math.max.apply(null, values.concat([35]));
+    var minT = Math.min.apply(null, values.concat([20]));
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = '#DDD6FE';
+    for (var i = 0; i <= 4; i++) {
+        var y = pad + ((H - 2 * pad) * i) / 4;
+        ctx.beginPath();
+        ctx.moveTo(pad, y);
+        ctx.lineTo(W - pad, y);
+        ctx.stroke();
+    }
+    ctx.strokeStyle = '#5B21B6';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    labels.forEach(function(_, idx) {
+        var x = pad + (idx * (W - 2 * pad)) / Math.max(1, labels.length - 1);
+        var v = values[idx] || 0;
+        var y = H - pad - ((v - minT) / (maxT - minT || 1)) * (H - 2 * pad);
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    ctx.fillStyle = '#1C1B2E';
+    ctx.font = '14px IBM Plex Sans Arabic, sans-serif';
+    ctx.textAlign = 'center';
+    labels.forEach(function(lbl, idx) {
+        var x = pad + (idx * (W - 2 * pad)) / Math.max(1, labels.length - 1);
+        ctx.fillText(String(lbl), x, H - 12);
+    });
+})();
+</script>
+{% endblock %}

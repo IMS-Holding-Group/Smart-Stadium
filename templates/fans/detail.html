@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}تفاصيل المشجع — Smart Stadium{% endblock %}
+{% block content %}
+<h1 class="page-heading">تفاصيل المشجع</h1>
+<div class="stat-card" style="max-width:640px;">
+    <h2>{{ fan['full_name'] }}</h2>
+    <p class="muted">اسم المستخدم: {{ fan['username'] }}</p>
+    <p>رقم التذكرة: <strong>{{ fan['ticket_number'] }}</strong></p>
+    <p>المقعد: قطاع {{ fan['block'] }} — صف {{ fan['row_number'] }} — رقم {{ fan['seat_number'] }}</p>
+    <p>البوابة: {{ fan['gate'] }}</p>
+    <p>التبريد الحالي: {{ fan['cooling_status'] }}</p>
+    <p>الجنسية: {{ fan['nationality'] or '—' }}</p>
+    <p>الهاتف: {{ fan['phone'] or '—' }}</p>
+    <a class="btn-secondary" href="{{ url_for('dashboard.index') }}">رجوع</a>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+.stat-icon {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stat-icon svg {
+    flex-shrink: 0;
+}
+
+.alert-warn {
+    color: var(--color-danger);
+    font-weight: 700;
+}
+
+.fan-card {
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.fan-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.fan-actions {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.cooling-quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}

@@ -1,0 +1,37 @@
+.map-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.map-canvas-wrap {
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: #fff;
+    padding: 12px;
+    text-align: center;
+}
+
+#stadiumCanvas {
+    max-width: 100%;
+    height: auto;
+    cursor: crosshair;
+}
+
+.map-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.map-tooltip {
+    position: fixed;
+    z-index: 50;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 14px;
+    pointer-events: none;
+    display: none;
+}
