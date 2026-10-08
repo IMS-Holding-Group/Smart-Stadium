@@ -6,7 +6,7 @@ from config import DATABASE_PATH
 from database import get_connection, init_schema
 
 DEFAULT_USERS = [
-    ('admin', 'admin123', 'admin', 'مشرف النظام'),
+    ('admin', '', 'admin', 'مشرف النظام'),
     ('staff1', 'staff123', 'staff', 'موظف خدمات الملعب'),
     ('fan001', 'fan123', 'fan', 'عبدالله المطيري'),
     ('fan002', 'fan123', 'fan', 'سارة العتيبي'),
